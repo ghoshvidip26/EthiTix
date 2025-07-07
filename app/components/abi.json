@@ -1,0 +1,110 @@
+{
+  "bytecode": "0xa11ceb0b0700000a0a01000402040c031018052823074bba010885024010c5021f0ae402210c8503d5010dda04080000010e0001080000030400000b0800000d00010001010f0203000100100601000100110201000103060c03050001060c0105010801020507080107060c030a020a02030a020302050801056576656e740c417070726f7665644c69737408617070726f766564054576656e74026964046e616d650b6465736372697074696f6e0464617465086c6f636174696f6e096f7267616e697a6572106d61785f7061727469636970616e74730d4576656e745265676973747279066576656e747313617070726f76655f7061727469636970616e74067369676e65720a616464726573735f6f660c6372656174655f6576656e741272656769737465725f666f725f6576656e7499dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557000000000000000000000000000000000000000000000000000000000000000114636f6d70696c6174696f6e5f6d65746164617461090003322e3003322e31000201020a050102070403050a02060a020703080a0209050a030202010c0a080100010402000205390a0011010c030a032a020f000b0143040c040a041001140a032104330a0410021406000000000000000024042d0a04100214060100000000000000170b040f02150a032900032a0b004003000000000000000012002d000b032a000f030b024403020b000105240b00010b0401066500000000000000270b00010b040106640000000000000027020104010207120b0011010c070b010b020b030b040b050a070b0612010c080b072a020f000b084404020301040001080a001101010b004004000000000000000012022d0202020001050106000000",
+  "abi": {
+    "address": "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557",
+    "name": "event",
+    "friends": [],
+    "exposed_functions": [
+      {
+        "name": "approve_participant",
+        "visibility": "public",
+        "is_entry": true,
+        "is_view": false,
+        "generic_type_params": [],
+        "params": ["&signer", "u64", "address"],
+        "return": []
+      },
+      {
+        "name": "create_event",
+        "visibility": "public",
+        "is_entry": true,
+        "is_view": false,
+        "generic_type_params": [],
+        "params": [
+          "&signer",
+          "u64",
+          "vector<u8>",
+          "vector<u8>",
+          "u64",
+          "vector<u8>",
+          "u64"
+        ],
+        "return": []
+      },
+      {
+        "name": "register_for_event",
+        "visibility": "public",
+        "is_entry": true,
+        "is_view": false,
+        "generic_type_params": [],
+        "params": ["&signer"],
+        "return": []
+      }
+    ],
+    "structs": [
+      {
+        "name": "ApprovedList",
+        "is_native": false,
+        "is_event": false,
+        "abilities": ["key"],
+        "generic_type_params": [],
+        "fields": [
+          {
+            "name": "approved",
+            "type": "vector<address>"
+          }
+        ]
+      },
+      {
+        "name": "Event",
+        "is_native": false,
+        "is_event": false,
+        "abilities": ["store"],
+        "generic_type_params": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "name",
+            "type": "vector<u8>"
+          },
+          {
+            "name": "description",
+            "type": "vector<u8>"
+          },
+          {
+            "name": "date",
+            "type": "u64"
+          },
+          {
+            "name": "location",
+            "type": "vector<u8>"
+          },
+          {
+            "name": "organizer",
+            "type": "address"
+          },
+          {
+            "name": "max_participants",
+            "type": "u64"
+          }
+        ]
+      },
+      {
+        "name": "EventRegistry",
+        "is_native": false,
+        "is_event": false,
+        "abilities": ["key"],
+        "generic_type_params": [],
+        "fields": [
+          {
+            "name": "events",
+            "type": "vector<0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557::event::Event>"
+          }
+        ]
+      }
+    ]
+  }
+}
