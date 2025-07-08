@@ -1,41 +1,40 @@
+// app/page.tsx (or app/dashboard/page.tsx if routing)
 "use client";
-import Approve from "./components/Approve";
-declare global {
-  interface Window {
-    aptos?: any;
-  }
-}
+import { useRouter } from "next/navigation";
 
-// Two sides of this application:
-// Admin side: admin creating an event, approving users giving them a unique token or nft
+export default function Dashboard() {
+  const router = useRouter();
 
-// User side: User connecting their wallet, registering for an event, and if approved then they can see & show their nft to the admin.
-
-export default function Home() {
-  const getAptosWallet = () => {
-    if ("aptos" in window) {
-      return window.aptos;
-    } else {
-      window.open("https://petra.app/", `_blank`);
-    }
+  const handleAdminSignup = () => {
+    router.push("/admin/signup");
   };
 
-  const connectWallet = async () => {
-    const wallet = getAptosWallet();
-    try {
-      const response = await wallet.connect();
-      console.log("Connected to wallet:", response);
-
-      const account = await wallet.account();
-      console.log("Account address:", account.address);
-    } catch (error) {
-      console.log("Error connecting to wallet:", error);
-    }
+  const handleUserSignup = () => {
+    router.push("/user/signup");
   };
+
   return (
-    <>
-      <button onClick={connectWallet}>Connect Wallet</button>
-      <Approve />
-    </>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="p-10 bg-white rounded-xl shadow-xl space-y-6 text-center">
+        <h1 className="text-3xl font-bold text-gray-800">Event Portal</h1>
+        <p className="text-gray-600">Choose your role to sign up</p>
+
+        <div className="space-y-4">
+          <button
+            onClick={handleAdminSignup}
+            className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Sign Up as Admin
+          </button>
+
+          <button
+            onClick={handleUserSignup}
+            className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          >
+            Sign Up as User
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -14,10 +14,14 @@
     "@aptos-labs/wallet-standard": "^0.5.0",
     "@wallet-standard/core": "^1.1.1",
     "aptos": "^1.21.0",
+    "axios": "^1.10.0",
     "got": "^14.4.7",
+    "mongoose": "^8.16.1",
     "next": "15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "viem": "^2.31.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
