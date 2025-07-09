@@ -2,10 +2,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  Aptos,
+  AptosConfig,
+  Network,
+  AnyRawTransaction,
+} from "@aptos-labs/ts-sdk";
 import axios from "axios";
+import { useAptosWallet } from "@/app/context/WalletContext";
 
 export default function UserDashboard() {
   const [events, setEvents] = useState([]);
+  const { address, connectWallet } = useAptosWallet();
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -15,35 +25,59 @@ export default function UserDashboard() {
     fetchEvents();
   }, []);
 
-  const handleRegister = async (eventId: string) => {
+  const handleRegister = async (eventId: String) => {
+    if (!address) {
+      alert("Please connect wallet first.");
+      return;
+    }
+    setError(null);
+    setTxHash(null);
+
+    const transaction: AnyRawTransaction = {
+      type: "entry_function_payload",
+      function:
+        "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557::event::registerForEvent",
+      type_arguments: [],
+      arguments: [eventId],
+    };
+
+    console.log("Transaction to sign and submit:", transaction);
+
     try {
-      const res = await axios.post("/api/register-event", { eventId });
-      alert(res.data.message);
-    } catch (err: any) {
-      console.log(err);
-      alert("Error registering for event");
+      const response = await window.aptos.signAndSubmitTransaction(transaction);
+      console.log("Wallet response:", response);
+      setTxHash(response.hash);
+    } catch (e: any) {
+      console.error("Sign and Submit failed:", e);
+      setError(`Transaction failed: ${e.message}`);
     }
   };
 
   return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {events.map((event) => (
-        <div key={event.id} className="bg-white shadow-lg rounded-lg p-4">
+        <div className="bg-white shadow-xl rounded-2xl overflow-hidden transition transform hover:scale-105 duration-200">
           <img
             src={event.imageUrl || "/placeholder.jpg"}
             alt={event.eventName}
-            className="w-full h-40 object-cover rounded"
+            className="w-full h-48 object-cover"
           />
-          <h2 className="text-xl font-semibold mt-2">{event.eventName}</h2>
-          <p className="text-gray-600">{event.descriptionOfEvent}</p>
-          <p className="text-sm mt-1">📍 {event.eventLocation}</p>
-          <p className="text-sm">👥 Capacity: {event.capacityOfEvent}</p>
-          <button
-            onClick={() => handleRegister(event._id)}
-            className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Register
-          </button>
+          <div className="p-4 space-y-2">
+            <h2 className="text-lg font-bold">{event.eventName}</h2>
+            <p className="text-sm text-gray-500 line-clamp-3">
+              {event.descriptionOfEvent}
+            </p>
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>📍 {event.eventLocation}</span>
+              <span>👥 {event.capacityOfEvent}</span>
+            </div>
+            <button
+              onClick={() => handleRegister(event._id)}
+              className="w-full mt-2 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:opacity-90 transition"
+            >
+              Register
+            </button>
+          </div>
         </div>
       ))}
     </div>

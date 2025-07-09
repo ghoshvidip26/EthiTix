@@ -1,0 +1,12 @@
+[package]
+name = "my_first_package"
+version = "1.0.0"
+authors = []
+
+[addresses]
+event = "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "testnet"
+subdir = "aptos-framework"
