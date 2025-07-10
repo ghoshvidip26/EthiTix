@@ -19,7 +19,7 @@ const AdminSignUp = () => {
         address,
         username,
       });
-      router.push("/admin/dashboard");
+      router.push("/admin/init-registration");
       console.log("Response from server:", res.data);
     } catch (error) {
       console.log("Error during sign up:", error);

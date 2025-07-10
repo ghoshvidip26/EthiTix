@@ -6,6 +6,7 @@ import {
   Network,
   AnyRawTransaction,
 } from "@aptos-labs/ts-sdk";
+import { useAptosWallet } from "@/app/context/WalletContext";
 
 declare global {
   interface Window {
@@ -24,6 +25,11 @@ export default function CreateEvent() {
     location: "",
     max_participants: "",
   });
+  const { address, connectWallet } = useAptosWallet();
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const APP_CREATOR_ADDRESS =
+    "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557";
   const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -32,7 +38,13 @@ export default function CreateEvent() {
   };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Submitting event data:", formData);
+
+    const transaction = {
+      type: "entry_function_payload",
+      function: `${APP_CREATOR_ADDRESS}::event_app::register_for_event_v2`,
+      type_arguments: [],
+      arguments: [APP_CREATOR_ADDRESS],
+    };
   };
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-white shadow-md rounded-lg">

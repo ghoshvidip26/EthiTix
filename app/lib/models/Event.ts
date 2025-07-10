@@ -6,7 +6,7 @@ dbConnect();
 
 const eventSchema = new Schema({
     id: {
-        type: String,
+        type: Number,
         required: true,
         unique: true, 
     },
