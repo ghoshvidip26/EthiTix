@@ -39,7 +39,7 @@ export default function UserDashboard() {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::register_for_event_v2`,
       type_arguments: [],
-      arguments: [APP_CREATOR_ADDRESS, Number(eventId)], // 🔥 type-safe
+      arguments: [APP_CREATOR_ADDRESS, Number(eventId)],
     };
 
     console.log("Transaction to sign and submit:", transaction);

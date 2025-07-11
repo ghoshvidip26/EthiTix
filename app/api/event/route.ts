@@ -13,6 +13,7 @@ export async function POST(request: Request) {
     } = await request.json();
 
     await dbConnect();
+    console.log("Received data: ",eventName,descriptionOfEvent,eventDate,eventLocation,capacityOfEvent);
 
     // 1. Check if event with same ID already exists
     const existingEvent = await Event.findOne({ eventName });
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       status: 201,
     });
   } catch (error) {
-    console.error("Server error:", error);
+    console.log("Server error:", error);
     return new Response(JSON.stringify({ error: "Server error" }), { status: 500 });
   }
 }

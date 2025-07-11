@@ -33,8 +33,7 @@ export default function CreateEvent() {
   };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const encoder = new TextEncoder();
-    // This is the correct structure
+
     const transaction = {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::create_event`,
@@ -49,7 +48,15 @@ export default function CreateEvent() {
     };
     try {
       const response = await window.aptos.signAndSubmitTransaction(transaction);
-      await axios.post("/api/admin/event", { formData });
+      await axios.post("/api/event", {
+        eventName: formData.name,
+        descriptionOfEvent: formData.description,
+        eventDate: Math.floor(
+          new Date(formData.date).getTime() / 1000
+        ).toString(),
+        eventLocation: formData.location,
+        capacityOfEvent: formData.max_participants.toString(),
+      });
       console.log("Wallet response:", response);
     } catch (error) {
       console.log("Error creating transaction:", error);

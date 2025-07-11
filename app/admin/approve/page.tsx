@@ -1,18 +1,30 @@
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import QRCode from "qrcode";
+import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
+
+const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
 const Approve = () => {
   const [transactionHash, setTransactionHash] = useState("");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [approve, setApprove] = useState(false);
   const { address } = useAptosWallet();
-  const onRegister = async () => {
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await axios.get("/api/user/profile");
+      console.log("Fetched users:", res.data);
+    };
+    fetchEvents();
+  }, []);
+
+  const generateQRCode = async () => {
     if (!address) {
-      alert("Please connect wallet first.");
       return;
     }
-    setTransactionHash("");
-
     const transaction = {
       type: "entry_function_payload",
       function:
@@ -20,22 +32,30 @@ const Approve = () => {
       type_arguments: [],
       arguments: [],
     };
-
-    console.log("Transaction to sign and submit:", transaction);
-
     try {
       const response = await window.aptos.signAndSubmitTransaction(transaction);
       console.log("Wallet response:", response);
-      setTransactionHash(response.hash);
+      setApprove(true);
     } catch (e: any) {
       console.error("Sign and Submit failed:", e);
     }
-  };
-  const generateQRCode = async () => {
-    if (!transactionHash) return;
-    const url = `https://explorer.aptoslabs.com/txn/${transactionHash}?network=testnet`;
-    const qr = await QRCode.toDataURL(url);
-    setQrCodeUrl(qr);
+    if (approve) {
+      const mintTokenTransaction = await aptos.mintDigitalAssetTransaction({
+        creator: address,
+        collection: "Example Collection",
+        description: "This is an example digital asset.",
+        name: "Example Asset",
+        uri: "https://github.com/bunlong/next-qrcode",
+      });
+      const mintTxn = await aptos.signAndSubmitTransaction({
+        signer: address,
+        transaction: mintTokenTransaction,
+      });
+      setTransactionHash(mintTxn.hash);
+      const url = `https://explorer.aptoslabs.com/txn/${transactionHash}?network=testnet`;
+      const qr = await QRCode.toDataURL(url);
+      setQrCodeUrl(qr);
+    }
   };
 
   return (
@@ -44,11 +64,17 @@ const Approve = () => {
         onClick={generateQRCode}
         className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
       >
-        Generate QR Code
+        Approve Participant
       </button>
 
       {qrCodeUrl && (
-        <img src={qrCodeUrl} alt="QR Code" className="mt-4 w-40 h-40" />
+        <img
+          src={qrCodeUrl}
+          alt="QR Code"
+          width={200}
+          height={200}
+          style={{ margin: 3 }}
+        />
       )}
     </div>
   );
