@@ -1,12 +1,8 @@
 "use client";
 import { useState } from "react";
-import {
-  Aptos,
-  AptosConfig,
-  Network,
-  AnyRawTransaction,
-} from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { useAptosWallet } from "@/app/context/WalletContext";
+import axios from "axios";
 
 declare global {
   interface Window {
@@ -18,7 +14,6 @@ const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
 export default function CreateEvent() {
   const [formData, setFormData] = useState({
-    id: "",
     name: "",
     description: "",
     date: "",
@@ -29,7 +24,7 @@ export default function CreateEvent() {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const APP_CREATOR_ADDRESS =
-    "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557";
+    "0xaeb2ddae68dec03cb0549043e698c325f5f6c440c122233cb6f01d77ab0c0a5f";
   const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -38,26 +33,32 @@ export default function CreateEvent() {
   };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    const encoder = new TextEncoder();
+    // This is the correct structure
     const transaction = {
       type: "entry_function_payload",
-      function: `${APP_CREATOR_ADDRESS}::event_app::register_for_event_v2`,
+      function: `${APP_CREATOR_ADDRESS}::event_app::create_event`,
+      arguments: [
+        formData.name,
+        formData.description,
+        Math.floor(new Date(formData.date).getTime() / 1000).toString(),
+        formData.location,
+        formData.max_participants.toString(),
+      ],
       type_arguments: [],
-      arguments: [APP_CREATOR_ADDRESS],
     };
+    try {
+      const response = await window.aptos.signAndSubmitTransaction(transaction);
+      await axios.post("/api/admin/event", { formData });
+      console.log("Wallet response:", response);
+    } catch (error) {
+      console.log("Error creating transaction:", error);
+    }
   };
   return (
-    <div className="max-w-xl mx-auto p-6 mt-10 bg-white shadow-md rounded-lg">
+    <div className="max-w-xl mx-auto p-6 mt-10 bg-white shadow-md rounded-lg text-black">
       <h1 className="text-xl font-semibold mb-4">Create Event</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="id"
-          type="number"
-          placeholder="Event ID"
-          onChange={handleChange}
-          required
-          className="w-full border p-2 rounded"
-        />
         <input
           name="name"
           type="text"
@@ -75,7 +76,7 @@ export default function CreateEvent() {
         />
         <input
           name="date"
-          type="number"
+          type="date"
           placeholder="Event Date (Unix timestamp)"
           onChange={handleChange}
           required

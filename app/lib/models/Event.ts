@@ -5,11 +5,6 @@ import mongoose from "mongoose";
 dbConnect();
 
 const eventSchema = new Schema({
-    id: {
-        type: Number,
-        required: true,
-        unique: true, 
-    },
     eventName: {
         type: String,
         required: true,

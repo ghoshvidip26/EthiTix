@@ -6,13 +6,12 @@ import { verifyMessage } from 'viem';
 export async function POST(request: Request) {
   try {
     const { address, username, signature } = await request.json();
+    console.log("Received data:", { address, username, signature });
     await dbConnect();
-    const message = `Registering @${username} for SplitMate`;
-    const isValid = await verifyMessage({ address, message, signature });
-    if (!isValid) {
-      return new Response(JSON.stringify({ message: "Invalid signature" }), { status: 401 });
+    if (!address || address.length !== 66 || !username) {
+      return new Response(JSON.stringify({ message: "Invalid input" }), { status: 400 });
     }
-
+    
     const existingProfile = await Admin.findOne({ $or: [{ username }, { walletAddress: address }] });
     if (existingProfile) {
       return new Response(JSON.stringify({ message: "Username or address already taken" }), { status: 409 });

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -6,7 +7,7 @@ const InitRegistration = () => {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const APP_CREATOR_ADDRESS =
-    "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557";
+    "0xaeb2ddae68dec03cb0549043e698c325f5f6c440c122233cb6f01d77ab0c0a5f";
   const handleInit = async () => {
     const transaction = {
       type: "entry_function_payload",
@@ -14,6 +15,7 @@ const InitRegistration = () => {
       type_arguments: [],
       arguments: [],
     };
+    console.log("Transaction to be sent:", transaction);
     try {
       const response = await window.aptos.signAndSubmitTransaction(transaction);
       router.push("/admin/create-event");

@@ -5,7 +5,6 @@ import Event from "../../lib/models/Event";
 export async function POST(request: Request) {
   try {
     const {
-      id,
       eventName,
       descriptionOfEvent,
       eventDate,
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
     await dbConnect();
 
     // 1. Check if event with same ID already exists
-    const existingEvent = await Event.findOne({ id });
+    const existingEvent = await Event.findOne({ eventName });
     if (existingEvent) {
       return new Response(JSON.stringify({ message: "Event ID already exists" }), {
         status: 409,
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
 
     // 2. Create and save the event
     const newEvent = new Event({
-      id,
       eventName,
       descriptionOfEvent,
       eventDate,
