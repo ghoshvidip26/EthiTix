@@ -27,8 +27,7 @@ export default function CreateEvent() {
   const [error, setError] = useState<string | null>(null);
   const [isInitDone, setIsInitDone] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
-  const APP_CREATOR_ADDRESS =
-    "0xaeb2ddae68dec03cb0549043e698c325f5f6c440c122233cb6f01d77ab0c0a5f";
+  const APP_CREATOR_ADDRESS = process.env.NEXT_APP_CREATOR_ADDRESS;
   const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,

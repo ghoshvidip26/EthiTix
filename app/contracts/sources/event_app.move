@@ -18,7 +18,6 @@ module event::event_app {
         max_participants: u64,
     }
 
-    /// Global registry of events created by an address
     struct EventRegistry has key {
         events: table::Table<vector<u8>, Event>,
     }
@@ -57,6 +56,13 @@ module event::event_app {
 
         table::add<vector<u8>, Event>(&mut registry.events, name, event);
     }
+
+    public fun get_event(addr: address, name: vector<u8>): Event acquires EventRegistry {
+        let registry = borrow_global<EventRegistry>(addr);
+        let event_ref = table::borrow(&registry.events, name);
+        *event_ref
+    }
+
     public entry fun init_registry(creator: &signer){
         move_to(creator, EventRegistry {
             events: table::new<vector<u8>, Event>(),

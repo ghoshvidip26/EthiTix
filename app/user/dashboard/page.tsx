@@ -30,8 +30,7 @@ export default function UserDashboard() {
     setLoadingId(eId);
     setError(null);
     setTxHash(null);
-    const APP_CREATOR_ADDRESS =
-      "0x99dc9f9c9f54e6a73bfeff492c4d5c31bfc9476915ce3ba0acae69ce88f95557";
+    const APP_CREATOR_ADDRESS = process.env.NEXT_APP_CREATOR_ADDRESS;
 
     const transaction = {
       type: "entry_function_payload",

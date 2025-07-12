@@ -56,8 +56,7 @@ const Approve = () => {
   const handleApprove = async (participantWallet: string) => {
     if (!address) return;
 
-    const APP_CREATOR_ADDRESS =
-      "0xaeb2ddae68dec03cb0549043e698c325f5f6c440c122233cb6f01d77ab0c0a5f";
+    const APP_CREATOR_ADDRESS = process.env.NEXT_APP_CREATOR_ADDRESS;
 
     setApprovalStates((prev) => ({
       ...prev,
