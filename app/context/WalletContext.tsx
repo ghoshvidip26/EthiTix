@@ -14,17 +14,20 @@ import React, {
 type WalletContextType = {
   address: string | null;
   connectWallet: () => Promise<void>;
+  account: any;
 };
 
 const WalletContext = createContext<WalletContextType>({
   address: null,
   connectWallet: async () => {},
+  account: null,
 });
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
 export const WalletProvider = ({ children }: PropsWithChildren) => {
   const [address, setAddress] = useState<string | null>(null);
+  const [account, setAccount] = useState(null);
 
   const connectWallet = useCallback(async () => {
     if (!window.aptos) {
@@ -34,6 +37,7 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
 
     try {
       const result = await window.aptos.connect();
+      setAccount(result);
       setAddress(result.address);
     } catch (e: any) {
       console.error("Wallet connect error:", e.message);
@@ -44,6 +48,7 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
     (async () => {
       if (window.aptos && window.aptos.isConnected) {
         const account = await window.aptos.account();
+        setAccount(account);
         setAddress(account.address);
       }
     })();
@@ -54,7 +59,7 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
       autoConnect={true}
       dappConfig={{ network: Network.TESTNET }}
     >
-      <WalletContext.Provider value={{ address, connectWallet }}>
+      <WalletContext.Provider value={{ address, connectWallet, account }}>
         {children}
       </WalletContext.Provider>
     </AptosWalletAdapterProvider>
