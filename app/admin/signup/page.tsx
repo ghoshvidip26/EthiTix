@@ -19,7 +19,7 @@ const AdminSignUp = () => {
         address,
         username,
       });
-      router.push("/admin/create-event");
+      router.push("/admin");
       console.log("Response from server:", res.data);
     } catch (error) {
       console.log("Error during sign up:", error);

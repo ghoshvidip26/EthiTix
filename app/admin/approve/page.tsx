@@ -6,6 +6,8 @@ import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { User, Loader, CheckCircle, QrCode, ArrowRight } from "lucide-react";
+import { useQRCode } from "@/app/context/QRCodeContext";
+import Link from "next/link";
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
@@ -23,6 +25,7 @@ type ApprovalState = {
 
 const Approve = () => {
   const { address } = useAptosWallet();
+  const { generateQRCode } = useQRCode();
   const [users, setUsers] = useState<UserData[]>([]);
   const [approvalStates, setApprovalStates] = useState<
     Record<string, ApprovalState>
@@ -56,7 +59,7 @@ const Approve = () => {
   const handleApprove = async (participantWallet: string) => {
     if (!address) return;
 
-    const APP_CREATOR_ADDRESS = process.env.NEXT_APP_CREATOR_ADDRESS;
+    const APP_CREATOR_ADDRESS = process.env.NEXT_PUBLIC_APP_CREATOR_ADDRESS;
 
     setApprovalStates((prev) => ({
       ...prev,
@@ -64,12 +67,13 @@ const Approve = () => {
     }));
 
     const fixedAddress = participantWallet.replace(/^0x/, "").padStart(64, "0");
+    console.log("Fixed address:", fixedAddress);
 
     const transaction = {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::approve_participant`,
       type_arguments: [],
-      arguments: ["IBW", `0x${fixedAddress}`],
+      arguments: ["Coldplay Concert", `0x${fixedAddress}`],
     };
 
     try {
@@ -78,6 +82,7 @@ const Approve = () => {
 
       const url = `https://explorer.aptoslabs.com/txn/${hash}?network=testnet`;
       const qr = await QRCode.toDataURL(url);
+      generateQRCode(hash);
 
       setApprovalStates((prev) => ({
         ...prev,
@@ -100,6 +105,12 @@ const Approve = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 flex items-center justify-center px-4 py-10 text-white">
       <div className="max-w-6xl mx-auto text-center ">
+        <Link
+          href="/admin/create-event"
+          className="text-indigo-950 mb-4 inline-block"
+        >
+          Create New Event
+        </Link>
         <h1 className="text-4xl font-extrabold text-amber-300 mb-4 flex items-center justify-center gap-2">
           <User className="w-8 h-8 text-amber-300" />
           Approve Participants
@@ -157,7 +168,7 @@ const Approve = () => {
                   )}
                 </button>
 
-                {state.approved && state.qrCodeUrl && (
+                {/* {state.approved && state.qrCodeUrl && (
                   <div className="mt-4 w-full text-center">
                     <h4 className="text-sm font-medium text-amber-300 flex items-center justify-center gap-1 mb-1">
                       <QrCode className="w-4 h-4" /> QR Code
@@ -176,7 +187,7 @@ const Approve = () => {
                       View on Explorer <ArrowRight className="w-3 h-3" />
                     </a>
                   </div>
-                )}
+                )} */}
               </div>
             );
           })}

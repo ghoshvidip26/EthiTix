@@ -4,6 +4,7 @@ import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 declare global {
   interface Window {
@@ -27,7 +28,10 @@ export default function CreateEvent() {
   const [error, setError] = useState<string | null>(null);
   const [isInitDone, setIsInitDone] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
-  const APP_CREATOR_ADDRESS = process.env.NEXT_APP_CREATOR_ADDRESS;
+
+  const APP_CREATOR_ADDRESS = process.env.NEXT_PUBLIC_APP_CREATOR_ADDRESS!;
+
+  console.log("App Creator Address:", APP_CREATOR_ADDRESS);
   const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -42,11 +46,11 @@ export default function CreateEvent() {
       type_arguments: [],
       arguments: [],
     };
-    console.log("Transaction to be sent:", transaction);
+
     try {
       const response = await window.aptos.signAndSubmitTransaction(transaction);
-      router.push("/admin/create-event");
       console.log("Wallet response:", response);
+      router.push("/admin/create-event");
       setTxHash(response.hash);
     } catch (e: any) {
       console.error("Sign and Submit failed:", e);
@@ -166,6 +170,9 @@ export default function CreateEvent() {
           >
             Create Event
           </button>
+          <Link href="/admin/approve">
+            <p className="text-blue-900 text-center">Approve Participants</p>
+          </Link>
         </form>
       </div>
     </div>

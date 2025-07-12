@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./globals.css";
 import { WalletProvider } from "./context/WalletContext";
+import { QRCodeProvider } from "./context/QRCodeContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <WalletProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <QRCodeProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </QRCodeProvider>
         </WalletProvider>
       </body>
     </html>
