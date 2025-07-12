@@ -29,13 +29,13 @@ const UserSignUp = () => {
   const isSignUpDisabled = !username.trim() || !address || isLoading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl p-8 space-y-8 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-indigo-900/90 backdrop-blur-md border border-amber-300/30 shadow-2xl rounded-2xl p-8 space-y-8 text-white">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text">
+          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-300 to-yellow-200 text-transparent bg-clip-text">
             User Sign Up
           </h1>
-          <p className="mt-2 text-slate-300 text-sm">
+          <p className="mt-2 text-amber-100 text-sm">
             Connect wallet & pick a username to begin
           </p>
         </div>
@@ -44,19 +44,19 @@ const UserSignUp = () => {
           <div className="relative">
             <label
               htmlFor="username"
-              className="text-sm font-medium text-slate-300"
+              className="text-sm font-medium text-amber-200"
             >
               Username
             </label>
             <div className="relative">
-              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-300" />
               <input
                 id="username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="yourname"
-                className="w-full bg-white/10 text-white placeholder-slate-400 border border-white/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-indigo-800 text-amber-100 placeholder-amber-200 border border-amber-300/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 disabled={isLoading}
               />
             </div>
@@ -67,7 +67,7 @@ const UserSignUp = () => {
               <button
                 type="button"
                 onClick={connectWallet}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 transition text-white text-lg rounded-xl shadow-md"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-indigo-900 text-lg font-semibold rounded-xl shadow-md transition"
               >
                 <FaWallet />
                 Connect Wallet
@@ -80,15 +80,16 @@ const UserSignUp = () => {
               className={`w-full flex items-center justify-center gap-2 px-6 py-3 text-lg font-semibold rounded-xl transition-all ${
                 isSignUpDisabled
                   ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700 text-white shadow-md"
+                  : "bg-yellow-300 hover:bg-yellow-200 text-indigo-950 shadow-md"
               }`}
             >
               Sign Up
             </button>
           </div>
         </form>
+
         {address && (
-          <div className="text-xs text-center text-green-400 mt-2">
+          <div className="text-xs text-center text-yellow-100 mt-2">
             Connected: {address.slice(0, 6)}...{address.slice(-4)}
           </div>
         )}

@@ -55,12 +55,12 @@ export default function UserDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 text-white p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {events.map((event) => (
           <div
             key={event._id}
-            className="bg-white/10 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl overflow-hidden transition transform hover:scale-105 duration-200"
+            className="bg-indigo-900/90 backdrop-blur-md border border-amber-300/20 shadow-xl rounded-2xl overflow-hidden transition transform hover:scale-105 duration-200"
           >
             <img
               src={
@@ -71,13 +71,13 @@ export default function UserDashboard() {
               className="w-full h-48 object-cover rounded-t-2xl"
             />
             <div className="p-4 space-y-2">
-              <h2 className="text-lg font-bold text-white truncate">
+              <h2 className="text-lg font-bold text-amber-200 truncate">
                 {event.eventName}
               </h2>
-              <p className="text-sm text-slate-300 line-clamp-3">
+              <p className="text-sm text-amber-100 line-clamp-3">
                 {event.descriptionOfEvent}
               </p>
-              <div className="flex justify-between items-center text-xs text-slate-400 mt-2">
+              <div className="flex justify-between items-center text-xs text-amber-300 mt-2">
                 <span>📍 {event.eventLocation}</span>
                 <span>👥 {event.capacityOfEvent}</span>
               </div>
@@ -85,7 +85,7 @@ export default function UserDashboard() {
               <button
                 onClick={() => handleRegister(event._id)}
                 disabled={loadingId === event._id}
-                className="w-full mt-3 flex justify-center items-center gap-2 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-3 flex justify-center items-center gap-2 py-2 bg-amber-300 text-indigo-900 rounded-xl font-semibold hover:bg-amber-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingId === event._id ? (
                   <>
@@ -102,7 +102,7 @@ export default function UserDashboard() {
       </div>
 
       {txHash && (
-        <div className="text-center mt-6 text-green-400 text-sm">
+        <div className="text-center mt-6 text-amber-200 text-sm">
           ✅ Transaction Submitted:{" "}
           <a
             href={`https://explorer.aptoslabs.com/txn/${txHash}?network=testnet`}

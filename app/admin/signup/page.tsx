@@ -19,7 +19,7 @@ const AdminSignUp = () => {
         address,
         username,
       });
-      router.push("/admin/init-registration");
+      router.push("/admin/create-event");
       console.log("Response from server:", res.data);
     } catch (error) {
       console.log("Error during sign up:", error);
@@ -29,7 +29,7 @@ const AdminSignUp = () => {
   const isSignUpDisabled = !username.trim() || !address || isLoading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl p-8 space-y-8 text-white">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text">
