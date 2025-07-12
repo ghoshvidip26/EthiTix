@@ -29,71 +29,69 @@ const UserSignUp = () => {
   const isSignUpDisabled = !username.trim() || !address || isLoading;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl p-8 space-y-8 text-white">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Create Your Account
+          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text">
+            User Sign Up
           </h1>
-          <p className="mt-2 text-gray-600">
-            Welcome! Connect your wallet and choose a username to get started.
+          <p className="mt-2 text-slate-300 text-sm">
+            Connect wallet & pick a username to begin
           </p>
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-6">
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">
-              Step 1: Connect Wallet
-            </label>
-            {address ? (
-              <div className="flex items-center justify-center w-full px-6 py-3 space-x-2 text-lg text-green-700 bg-green-100 border border-green-200 rounded-lg">
-                <FaCheckCircle />
-                <span>Wallet Connected Successfully</span>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={connectWallet}
-                disabled={isLoading}
-                className="flex items-center justify-center w-full px-6 py-3 space-x-3 text-lg font-semibold text-white transition-transform duration-200 bg-cyan-500 rounded-lg hover:bg-cyan-600 active:scale-95 disabled:bg-gray-400"
-              >
-                <FaWallet />
-                <span>
-                  {isLoading ? "Connecting..." : "Connect Aptos Wallet"}
-                </span>
-              </button>
-            )}
-          </div>
-
           <div className="relative">
             <label
               htmlFor="username"
-              className="block mb-2 text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-slate-300"
             >
-              Step 2: Choose Username
+              Username
             </label>
-            <FaUser className="absolute w-5 h-5 text-gray-400 top-12 left-4" />
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              className="w-full py-3 pl-12 pr-4 text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-              disabled={isLoading}
-            />
+            <div className="relative">
+              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="yourname"
+                className="w-full bg-white/10 text-white placeholder-slate-400 border border-white/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                disabled={isLoading}
+              />
+            </div>
           </div>
 
-          <div>
+          <div className="space-y-3">
+            {!address && (
+              <button
+                type="button"
+                onClick={connectWallet}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 transition text-white text-lg rounded-xl shadow-md"
+              >
+                <FaWallet />
+                Connect Wallet
+              </button>
+            )}
+
             <button
               type="submit"
               disabled={isSignUpDisabled}
-              className="w-full px-6 py-3 text-lg font-bold text-white transition-all duration-300 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className={`w-full flex items-center justify-center gap-2 px-6 py-3 text-lg font-semibold rounded-xl transition-all ${
+                isSignUpDisabled
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700 text-white shadow-md"
+              }`}
             >
               Sign Up
             </button>
           </div>
         </form>
+        {address && (
+          <div className="text-xs text-center text-green-400 mt-2">
+            Connected: {address.slice(0, 6)}...{address.slice(-4)}
+          </div>
+        )}
       </div>
     </div>
   );

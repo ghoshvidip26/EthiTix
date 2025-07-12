@@ -27,12 +27,14 @@ const InitRegistration = () => {
     }
   };
   return (
-    <button
-      onClick={handleInit}
-      className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700"
-    >
-      Initialize
-    </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6 flex justify-center items-center">
+      <button
+        onClick={handleInit}
+        className="mt-3 flex justify-center items-center gap-2 py-2 px-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Initialize
+      </button>
+    </div>
   );
 };
 

@@ -1,13 +1,7 @@
 // components/UserDashboard.tsx
 "use client";
-
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import {
-  Aptos,
-  AptosConfig,
-  Network,
-  AnyRawTransaction,
-} from "@aptos-labs/ts-sdk";
 import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
 
@@ -16,7 +10,9 @@ export default function UserDashboard() {
   const { address, connectWallet } = useAptosWallet();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  console.log("events", events);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [eventId, setEventId] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchEvents = async () => {
       const res = await axios.get("/api/event");
@@ -26,10 +22,12 @@ export default function UserDashboard() {
   }, []);
 
   const handleRegister = async (eventId: string) => {
+    let eId = eventId.replace(/\D/g, "");
     if (!address) {
       alert("Please connect wallet first.");
       return;
     }
+    setLoadingId(eId);
     setError(null);
     setTxHash(null);
     const APP_CREATOR_ADDRESS =
@@ -39,7 +37,7 @@ export default function UserDashboard() {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::register_for_event_v2`,
       type_arguments: [],
-      arguments: [APP_CREATOR_ADDRESS, Number(eventId)],
+      arguments: [APP_CREATOR_ADDRESS, Number(eId)],
     };
 
     console.log("Transaction to sign and submit:", transaction);
@@ -51,39 +49,75 @@ export default function UserDashboard() {
     } catch (e: any) {
       console.error("Sign and Submit failed:", e);
       setError(`Transaction failed: ${e.message}`);
+    } finally {
+      setLoadingId(null);
     }
   };
 
   return (
-    <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {events.map((event) => (
-        <div
-          key={event.eventId}
-          className="bg-white shadow-xl rounded-2xl overflow-hidden transition transform hover:scale-105 duration-200"
-        >
-          <img
-            src={event.imageUrl || "/placeholder.jpg"}
-            alt={event.eventName}
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-4 space-y-2">
-            <h2 className="text-lg font-bold">{event.eventName}</h2>
-            <p className="text-sm text-gray-500 line-clamp-3">
-              {event.descriptionOfEvent}
-            </p>
-            <div className="flex justify-between text-xs text-gray-600">
-              <span>📍 {event.eventLocation}</span>
-              <span>👥 {event.capacityOfEvent}</span>
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {events.map((event) => (
+          <div
+            key={event._id}
+            className="bg-white/10 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl overflow-hidden transition transform hover:scale-105 duration-200"
+          >
+            <img
+              src={
+                event.imageUrl ||
+                "https://www.sirtbhopal.ac.in/assets/images/blogs/basics-of-blockchain-explained-in-easy-terms.webp"
+              }
+              alt={event.eventName}
+              className="w-full h-48 object-cover rounded-t-2xl"
+            />
+            <div className="p-4 space-y-2">
+              <h2 className="text-lg font-bold text-white truncate">
+                {event.eventName}
+              </h2>
+              <p className="text-sm text-slate-300 line-clamp-3">
+                {event.descriptionOfEvent}
+              </p>
+              <div className="flex justify-between items-center text-xs text-slate-400 mt-2">
+                <span>📍 {event.eventLocation}</span>
+                <span>👥 {event.capacityOfEvent}</span>
+              </div>
+
+              <button
+                onClick={() => handleRegister(event._id)}
+                disabled={loadingId === event._id}
+                className="w-full mt-3 flex justify-center items-center gap-2 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingId === event._id ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Registering...
+                  </>
+                ) : (
+                  "Register"
+                )}
+              </button>
             </div>
-            <button
-              onClick={() => handleRegister(event.eventId)}
-              className="w-full mt-2 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:opacity-90 transition"
-            >
-              Register
-            </button>
           </div>
+        ))}
+      </div>
+
+      {txHash && (
+        <div className="text-center mt-6 text-green-400 text-sm">
+          ✅ Transaction Submitted:{" "}
+          <a
+            href={`https://explorer.aptoslabs.com/txn/${txHash}?network=testnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            View on Explorer
+          </a>
         </div>
-      ))}
-    </div>
+      )}
+
+      {error && (
+        <div className="text-center mt-6 text-red-400 text-sm">❌ {error}</div>
+      )}
+    </main>
   );
 }

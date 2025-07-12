@@ -1,6 +1,7 @@
 // /app/api/register/route.ts
 import dbConnect from "../../lib/models/mongodb";
 import Event from "../../lib/models/Event"; 
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(request: Request) {
   try {
@@ -11,10 +12,15 @@ export async function POST(request: Request) {
       eventLocation,
       capacityOfEvent,
     } = await request.json();
+    console.log("Received data:", {
+      eventName,
+      descriptionOfEvent,
+      eventDate,
+      eventLocation,
+      capacityOfEvent,
+    });
 
     await dbConnect();
-    console.log("Received data: ",eventName,descriptionOfEvent,eventDate,eventLocation,capacityOfEvent);
-
     // 1. Check if event with same ID already exists
     const existingEvent = await Event.findOne({ eventName });
     if (existingEvent) {
@@ -25,11 +31,12 @@ export async function POST(request: Request) {
 
     // 2. Create and save the event
     const newEvent = new Event({
-      eventName,
-      descriptionOfEvent,
-      eventDate,
-      eventLocation,
-      capacityOfEvent,
+      id: uuidv4(),
+      eventName: eventName,
+      descriptionOfEvent: descriptionOfEvent,
+      eventDate: eventDate,
+      eventLocation: eventLocation,
+      capacityOfEvent: capacityOfEvent,
     });
 
     await newEvent.save();

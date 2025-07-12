@@ -99,16 +99,18 @@ const Approve = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-6 py-12">
-      <div className="max-w-5xl mx-auto text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-2">
-          <User className="w-8 h-8 text-green-600" /> Approve Participants
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-10 text-white">
+      <div className="max-w-6xl mx-auto text-center ">
+        <h1 className="text-4xl font-extrabold text-white mb-4 flex items-center justify-center gap-2">
+          <User className="w-8 h-8 text-green-600" />
+          Approve Participants
         </h1>
-        <p className="text-gray-500 mb-12">
-          Click approve to verify each participant individually.
+        <p className="mb-10 text-base text-white">
+          Click the approve button to verify each participant and generate a
+          unique QR code.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
           {users.map((user) => {
             const state = approvalStates[user.walletAddress] || {
               loading: false,
@@ -120,17 +122,17 @@ const Approve = () => {
             return (
               <div
                 key={user.walletAddress}
-                className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition duration-300 flex flex-col items-start gap-4"
+                className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all"
               >
-                <div className="flex items-center gap-4 w-full">
+                <div className="flex items-start gap-4 mb-3">
                   <div className="bg-green-100 p-3 rounded-full">
                     <User className="text-green-600 w-5 h-5" />
                   </div>
-                  <div className="text-left flex-1">
-                    <p className="text-lg font-semibold text-gray-800">
+                  <div className="text-left">
+                    <h2 className="text-md font-semibold text-gray-800">
                       {user.username}
-                    </p>
-                    <p className="text-sm text-gray-500 break-all">
+                    </h2>
+                    <p className="text-xs text-gray-500 break-all">
                       {user.walletAddress}
                     </p>
                   </div>
@@ -139,40 +141,44 @@ const Approve = () => {
                 <button
                   onClick={() => handleApprove(user.walletAddress)}
                   disabled={state.loading || state.approved}
-                  className="inline-flex items-center gap-2 px-5 py-2 mt-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition disabled:opacity-50"
                 >
                   {state.loading ? (
                     <>
-                      <Loader className="animate-spin w-4 h-4" /> Approving...
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Approving...
                     </>
                   ) : state.approved ? (
                     <>
-                      <CheckCircle className="w-4 h-4 text-white" /> Approved
+                      <CheckCircle className="w-4 h-4" />
+                      Approved
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="w-4 h-4 text-white" /> Approve
+                      <CheckCircle className="w-4 h-4" />
+                      Approve
                     </>
                   )}
                 </button>
 
                 {state.approved && state.qrCodeUrl && (
-                  <div className="mt-4 w-full text-center">
-                    <h4 className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1 mb-1">
-                      <QrCode className="w-4 h-4" /> QR Code
-                    </h4>
+                  <div className="mt-5 text-center">
+                    <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1 mb-2">
+                      <QrCode className="w-4 h-4" />
+                      Scan QR
+                    </p>
                     <img
                       src={state.qrCodeUrl}
                       alt="QR Code"
-                      className="w-36 h-36 mx-auto border border-gray-300 rounded-md shadow"
+                      className="w-32 h-32 mx-auto border rounded-md shadow-sm"
                     />
                     <a
                       href={`https://explorer.aptoslabs.com/txn/${state.transactionHash}?network=testnet`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                      className="mt-3 inline-flex items-center text-sm text-blue-600 hover:underline"
                     >
-                      View on Explorer <ArrowRight className="w-3 h-3" />
+                      View on Explorer <ArrowRight className="w-3 h-3 ml-1" />
                     </a>
                   </div>
                 )}
