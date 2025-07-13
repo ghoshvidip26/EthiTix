@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import QRCode from "qrcode";
 import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
-import { User, Loader, CheckCircle, QrCode, ArrowRight } from "lucide-react";
+import { User, Loader, CheckCircle } from "lucide-react";
 import { useQRCode } from "@/app/context/QRCodeContext";
 import Link from "next/link";
 
@@ -14,6 +14,7 @@ const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 type UserData = {
   username: string;
   walletAddress: string;
+  eventName: string;
 };
 
 type ApprovalState = {
@@ -55,7 +56,7 @@ const Approve = () => {
     fetchUsers();
   }, []);
 
-  const handleApprove = async (participantWallet: string) => {
+  const handleApprove = async (participantWallet: string, user: UserData) => {
     if (!address) return;
 
     const APP_CREATOR_ADDRESS = process.env.NEXT_PUBLIC_APP_CREATOR_ADDRESS;
@@ -72,7 +73,7 @@ const Approve = () => {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::approve_participant`,
       type_arguments: [],
-      arguments: ["Coldplay Concert", `0x${fixedAddress}`],
+      arguments: [user.eventName, `0x${fixedAddress}`],
     };
 
     try {
@@ -128,33 +129,38 @@ const Approve = () => {
               transactionHash: "",
             };
 
+            console.log("Rendering user:", user, "State:", state);
+
             return (
               <div
                 key={user.walletAddress}
-                className="bg-indigo-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col items-start gap-4"
+                className="flex flex-col justify-between h-full rounded-2xl bg-slate-800/50 border border-slate-700 p-6 shadow-lg transition-all hover:shadow-yellow-400/10 hover:border-slate-600 text-left"
               >
-                <div className="flex items-start gap-4 mb-3">
-                  <div className="bg-amber-100 p-3 rounded-full">
-                    <User className="text-blue-800 w-5 h-5" />
+                <div className="flex items-center space-x-3">
+                  <div className="bg-amber-300 text-indigo-900 rounded-full p-3">
+                    <User className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <p className="text-lg font-semibold text-amber-200">
+                    <h3 className="text-lg font-bold text-white">
                       {user.username}
+                    </h3>
+                    <p className="text-xs text-amber-100 break-all">
+                      {user.walletAddress.slice(0, 6)}...
+                      {user.walletAddress.slice(-4)}
                     </p>
-                    <p className="text-sm text-amber-100 break-all">
-                      {user.walletAddress}
-                    </p>
+                    <p className="text-sm text-amber-200">{user.eventName}</p>
                   </div>
                 </div>
 
+                {/* Button */}
                 <button
                   onClick={() => handleApprove(user.walletAddress)}
                   disabled={state.loading || state.approved}
-                  className="inline-flex items-center gap-2 px-5 py-2 mt-2 bg-amber-400 text-blue-900 rounded-lg font-medium hover:bg-amber-300 disabled:opacity-50"
+                  className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-yellow-400 text-indigo-900 font-semibold rounded-xl hover:bg-yellow-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {state.loading ? (
                     <>
-                      <Loader className="animate-spin w-4 h-4" /> Approving...
+                      <Loader className="w-4 h-4 animate-spin" /> Approving...
                     </>
                   ) : state.approved ? (
                     <>
@@ -166,27 +172,6 @@ const Approve = () => {
                     </>
                   )}
                 </button>
-
-                {/* {state.approved && state.qrCodeUrl && (
-                  <div className="mt-4 w-full text-center">
-                    <h4 className="text-sm font-medium text-amber-300 flex items-center justify-center gap-1 mb-1">
-                      <QrCode className="w-4 h-4" /> QR Code
-                    </h4>
-                    <img
-                      src={state.qrCodeUrl}
-                      alt="QR Code"
-                      className="w-36 h-36 mx-auto border border-amber-200 rounded-md shadow"
-                    />
-                    <a
-                      href={`https://explorer.aptoslabs.com/txn/${state.transactionHash}?network=testnet`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1 text-sm text-amber-100 hover:underline"
-                    >
-                      View on Explorer <ArrowRight className="w-3 h-3" />
-                    </a>
-                  </div>
-                )} */}
               </div>
             );
           })}
