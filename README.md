@@ -1,4 +1,5 @@
 <div align="center">
+  <img width="1024" height="1024" alt="Logo" src="https://github.com/user-attachments/assets/a1a6cb89-925c-44bf-b200-716d7fcf015f" />
   <h1>EthiTix</h1>
   <p><b>Organize Smart. Approve Fast.</b></p>
   <p>A decentralized event ticketing and management platform powered by the Aptos blockchain, designed to eliminate ticket fraud and streamline event access.</p>
