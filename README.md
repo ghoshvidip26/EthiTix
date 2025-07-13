@@ -11,10 +11,6 @@
 
 ---
 
-<img width="1680" height="772" alt="Screenshot 2025-07-12 at 18 22 39" src="https://github.com/user-attachments/assets/e8f5dab0-38b1-4356-ac96-abf4629316be" />
-<img width="1667" height="811" alt="Screenshot 2025-07-13 at 14 46 13" src="https://github.com/user-attachments/assets/79a845b8-0e3a-4789-bb0d-355d0990041b" />
-<img width="1680" height="817" alt="Screenshot 2025-07-13 at 14 45 49" src="https://github.com/user-attachments/assets/7c681b52-459d-4c32-ba9e-2767ce0d773d" />
-
 ## 💡 The Problem
 
 Traditional event ticketing is plagued with issues that frustrate both organizers and attendees. Organizers face:
@@ -43,13 +39,16 @@ Our platform prevents black marketing by issuing wallet-bound, QR-based tickets 
 - **Secure & Unique QR Codes:** Upon approval, each participant receives a unique QR code for entry, preventing duplication and unauthorized access.
 - **Built on Aptos:** Utilizes the speed, low cost, and security of the Aptos blockchain for a superior user experience.
 
-## gallery
+## Gallery
 
-| Landing Page                                                                                                                                                                    | Create Event (Admin)                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<p align="center">`The main entry point, outlining the core value propositions of the platform.`</p><img src="https://i.imgur.com/7w8rQzP.png" alt="Landing Page">`            | `<p align="center">`Admin interface for creating and publishing new events on the blockchain.`</p><img src="https://i.imgur.com/4lX3n4N.png" alt="Create Event Page">` |
-| **Approve Participants (Admin)**                                                                                                                                                | **Event Dashboard (User)**                                                                                                                                             |
-| `<p align="center">`Admins can review and approve registered participants with a single click.`</p><img src="https://i.imgur.com/Bf2wK7d.png" alt="Approve Participants Page">` | `<p align="center">`Users can view and register for available events.`</p><img src="https://i.imgur.com/XF8k2eY.png" alt="User Dashboard">`                            |
+ - Landing Page
+  <img width="1680" height="772" alt="Screenshot 2025-07-12 at 18 22 39" src="https://github.com/user-attachments/assets/e8f5dab0-38b1-4356-ac96-abf4629316be" />
+  
+ - Create Event
+  <img width="1667" height="811" alt="Screenshot 2025-07-13 at 14 46 13" src="https://github.com/user-attachments/assets/79a845b8-0e3a-4789-bb0d-355d0990041b" />
+  
+ - Registering for an Event
+  <img width="1680" height="817" alt="Screenshot 2025-07-13 at 14 45 49" src="https://github.com/user-attachments/assets/7c681b52-459d-4c32-ba9e-2767ce0d773d" />
 
 ## ⚙️ How It Works
 
