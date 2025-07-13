@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { FaWallet, FaUser, FaCheckCircle } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaWallet, FaUser } from "react-icons/fa";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -10,11 +10,32 @@ const AdminSignUp = () => {
   const router = useRouter();
   const { address, connectWallet } = useAptosWallet();
   const [isLoading, setIsLoading] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+  console.log("Current username:", username);
+  useEffect(() => {
+    const checkUser = async () => {
+      if (!username.trim()) return;
+      try {
+        const res = await axios.get(`/api/admin/profile/${username}`);
+        console.log("Admin profile data:", res.data);
+        if (res.data) {
+          router.push("/admin");
+          setAlreadyRegistered(true);
+        } else {
+          setAlreadyRegistered(false);
+        }
+      } catch (error) {
+        console.log("Admin not registered yet.");
+      }
+    };
+    checkUser();
+  }, [username]);
 
-  const handleSignUp = async (e: any) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     if (!username.trim() || !address) return;
     try {
+      setIsLoading(true);
       const res = await axios.post("/api/admin/register", {
         address,
         username,
@@ -23,10 +44,12 @@ const AdminSignUp = () => {
       console.log("Response from server:", res.data);
     } catch (error) {
       console.log("Error during sign up:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const isSignUpDisabled = !username.trim() || !address || isLoading;
+  const isLoginDisabled = !username.trim() || !address || isLoading;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 flex items-center justify-center px-4">
@@ -40,7 +63,7 @@ const AdminSignUp = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative">
             <label
               htmlFor="username"
@@ -56,8 +79,8 @@ const AdminSignUp = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="yourname"
-                className="w-full bg-white/10 text-white placeholder-slate-400 border border-white/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                disabled={isLoading}
+                className="w-full bg-indigo-800 text-amber-100 placeholder-amber-200 border border-amber-300/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                disabled={isLoading || alreadyRegistered}
               />
             </div>
           </div>
@@ -76,14 +99,14 @@ const AdminSignUp = () => {
 
             <button
               type="submit"
-              disabled={isSignUpDisabled}
+              disabled={isLoginDisabled || alreadyRegistered}
               className={`w-full flex items-center justify-center gap-2 px-6 py-3 text-lg font-semibold rounded-xl transition-all ${
-                isSignUpDisabled
+                isLoginDisabled || alreadyRegistered
                   ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700 text-white shadow-md"
+                  : "bg-yellow-300 hover:bg-yellow-200 text-indigo-950 shadow-md"
               }`}
             >
-              Sign Up
+              {alreadyRegistered ? "Already Registered" : "Sign Up"}
             </button>
           </div>
         </form>

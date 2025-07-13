@@ -1,4 +1,3 @@
-// /lib/models/Profile.ts (rename the file and model)
 import dbConnect from "./mongodb";
 import { Schema } from "mongoose";
 import mongoose from "mongoose";

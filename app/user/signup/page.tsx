@@ -1,20 +1,41 @@
 "use client";
-import React, { useState } from "react";
-import { FaWallet, FaUser, FaCheckCircle } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaWallet, FaUser } from "react-icons/fa";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const UserSignUp = () => {
+const UserLogin = () => {
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+
   const router = useRouter();
   const { address, connectWallet } = useAptosWallet();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignUp = async (e: any) => {
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const res = await axios.get(`/api/user/profile/${username}`);
+        console.log("User profile data:", res.data);
+        if (res.data) {
+          router.push("/user/dashboard");
+          setAlreadyRegistered(true);
+        } else {
+          setAlreadyRegistered(false);
+        }
+      } catch (error) {
+        console.log("User not registered yet.");
+      }
+    };
+    checkUser();
+  }, [username]);
+
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     if (!username.trim() || !address) return;
     try {
+      setIsLoading(true);
       const res = await axios.post("/api/user/register", {
         address,
         username,
@@ -23,10 +44,12 @@ const UserSignUp = () => {
       console.log("Response from server:", res.data);
     } catch (error) {
       console.log("Error during sign up:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const isSignUpDisabled = !username.trim() || !address || isLoading;
+  const isLoginDisabled = !username.trim() || !address || isLoading;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 to-amber-200 flex items-center justify-center px-4">
@@ -40,7 +63,7 @@ const UserSignUp = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative">
             <label
               htmlFor="username"
@@ -57,7 +80,7 @@ const UserSignUp = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="yourname"
                 className="w-full bg-indigo-800 text-amber-100 placeholder-amber-200 border border-amber-300/20 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                disabled={isLoading}
+                disabled={isLoading || alreadyRegistered}
               />
             </div>
           </div>
@@ -76,14 +99,14 @@ const UserSignUp = () => {
 
             <button
               type="submit"
-              disabled={isSignUpDisabled}
+              disabled={isLoginDisabled || alreadyRegistered}
               className={`w-full flex items-center justify-center gap-2 px-6 py-3 text-lg font-semibold rounded-xl transition-all ${
-                isSignUpDisabled
+                isLoginDisabled || alreadyRegistered
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-yellow-300 hover:bg-yellow-200 text-indigo-950 shadow-md"
               }`}
             >
-              Sign Up
+              {alreadyRegistered ? "Already Registered" : "Sign Up"}
             </button>
           </div>
         </form>
@@ -98,4 +121,4 @@ const UserSignUp = () => {
   );
 };
 
-export default UserSignUp;
+export default UserLogin;

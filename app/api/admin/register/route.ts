@@ -1,7 +1,6 @@
 // /app/api/register/route.ts
 import dbConnect from "../../../lib/models/mongodb";
 import Admin from "../../../lib/models/Admin"; // Use the new Profile model
-import { verifyMessage } from 'viem';
 
 export async function POST(request: Request) {
   try {
