@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import { useQRCode } from "@/app/context/QRCodeContext";
+import { PinataSDK } from "pinata";
+import { useEventContext } from "@/app/context/EventContext";
 
 export default function UserDashboard() {
-  const [events, setEvents] = useState([]);
+  // const [events, setEvents] = useState([]);
+  const { events, setEvents } = useEventContext();
   const { address, connectWallet } = useAptosWallet();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +20,13 @@ export default function UserDashboard() {
   const [registered, setRegistered] = useState(false);
   const { qrCodeURL, hash, generateQRCode } = useQRCode();
   console.log("QR Code URL:", qrCodeURL);
+
+  console.log("Events:", events);
+
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PINATA_JWT!,
+    pinataGateway: "example-gateway.mypinata.cloud",
+  });
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -59,6 +69,8 @@ export default function UserDashboard() {
       setRegistered(true);
       await generateQRCode(response.hash);
       setShowTicketModal(true);
+      const upload = await pinata.upload.public.url(qrCodeURL || "");
+      console.log("QR Code uploaded to Pinata:", upload);
     } catch (e: any) {
       console.error("Transaction failed:", e);
       setError(`Transaction failed: ${e.message || "Unknown error occurred"}`);

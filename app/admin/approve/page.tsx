@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import QRCode from "qrcode";
 import axios from "axios";
 import { useAptosWallet } from "@/app/context/WalletContext";
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { User, Loader, CheckCircle } from "lucide-react";
 import { useQRCode } from "@/app/context/QRCodeContext";
+import { useEventContext } from "@/app/context/EventContext";
 import Link from "next/link";
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
@@ -27,11 +28,15 @@ type ApprovalState = {
 const Approve = () => {
   const { address } = useAptosWallet();
   const { generateQRCode } = useQRCode();
+  const { events } = useEventContext();
   const [users, setUsers] = useState<UserData[]>([]);
   const [approvalStates, setApprovalStates] = useState<
     Record<string, ApprovalState>
   >({});
-
+  // console.log("Current event:", events);
+  events.forEach((ev) => {
+    console.log("Event name:", ev.name);
+  });
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -56,7 +61,10 @@ const Approve = () => {
     fetchUsers();
   }, []);
 
-  const handleApprove = async (participantWallet: string, user: UserData) => {
+  const handleApprove = async (
+    participantWallet: string,
+    eventName: string
+  ) => {
     if (!address) return;
 
     const APP_CREATOR_ADDRESS = process.env.NEXT_PUBLIC_APP_CREATOR_ADDRESS;
@@ -73,7 +81,7 @@ const Approve = () => {
       type: "entry_function_payload",
       function: `${APP_CREATOR_ADDRESS}::event_app::approve_participant`,
       type_arguments: [],
-      arguments: [user.eventName, `0x${fixedAddress}`],
+      arguments: [eventName, `0x${fixedAddress}`],
     };
 
     try {
@@ -154,7 +162,7 @@ const Approve = () => {
 
                 {/* Button */}
                 <button
-                  onClick={() => handleApprove(user.walletAddress)}
+                  onClick={() => handleApprove(user.walletAddress, events.name)}
                   disabled={state.loading || state.approved}
                   className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-yellow-400 text-indigo-900 font-semibold rounded-xl hover:bg-yellow-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >

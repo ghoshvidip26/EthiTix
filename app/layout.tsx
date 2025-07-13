@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import "./globals.css";
 import { WalletProvider } from "./context/WalletContext";
 import { QRCodeProvider } from "./context/QRCodeContext";
+import { EventProvider } from "./context/EventContext";
 
 export const metadata: Metadata = {
   title: "EthiTix",
@@ -20,9 +21,11 @@ export default function RootLayout({
       <body>
         <WalletProvider>
           <QRCodeProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <EventProvider>
+              <Navbar />
+              {children}
+              <Footer />
+            </EventProvider>
           </QRCodeProvider>
         </WalletProvider>
       </body>
