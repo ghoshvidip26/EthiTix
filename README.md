@@ -107,8 +107,8 @@ To get a local copy up and running, follow these simple steps.
    Create a `.env.local` file in the root directory and add the necessary environment variables.
 
    ```env
-   NEXT_PUBLIC_APTOS_NODE_URL="https://fullnode.devnet.aptoslabs.com/v1"
-   NEXT_PUBLIC_CONTRACT_ADDRESS="0x..."
+   MONGODB_URI = ""
+   NEXT_PUBLIC_APP_CREATOR_ADDRESS = ""
    ```
 
 4. **Deploy the Smart Contract:**
