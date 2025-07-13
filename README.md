@@ -1,14 +1,15 @@
-<div align="center">
-  <h1>EthiTix</h1>
-  <p><b>Organize Smart. Approve Fast.</b></p>
-  <p>A decentralized event ticketing and management platform powered by the Aptos blockchain, designed to eliminate ticket fraud and streamline event access.</p>
+<div align="center" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
+  <img width="60" height="60" alt="Logo" src="https://github.com/user-attachments/assets/a1a6cb89-925c-44bf-b200-716d7fcf015f" />
+  <h1 style="margin: 0;">EthiTix</h1>
 </div>
 
----
+<p align="center"><b>Organize Smart. Approve Fast.</b></p>
+<p align="center">
+  A decentralized event ticketing and management platform powered by the Aptos blockchain, designed to eliminate ticket fraud and streamline event access.
+</p>
 
-<img width="1680" height="772" alt="Screenshot 2025-07-12 at 18 22 39" src="https://github.com/user-attachments/assets/e8f5dab0-38b1-4356-ac96-abf4629316be" />
-<img width="1667" height="811" alt="Screenshot 2025-07-13 at 14 46 13" src="https://github.com/user-attachments/assets/79a845b8-0e3a-4789-bb0d-355d0990041b" />
-<img width="1680" height="817" alt="Screenshot 2025-07-13 at 14 45 49" src="https://github.com/user-attachments/assets/7c681b52-459d-4c32-ba9e-2767ce0d773d" />
+
+---
 
 ## 💡 The Problem
 
@@ -38,13 +39,16 @@ Our platform prevents black marketing by issuing wallet-bound, QR-based tickets 
 - **Secure & Unique QR Codes:** Upon approval, each participant receives a unique QR code for entry, preventing duplication and unauthorized access.
 - **Built on Aptos:** Utilizes the speed, low cost, and security of the Aptos blockchain for a superior user experience.
 
-## gallery
+## Gallery
 
-| Landing Page                                                                                                                                                                    | Create Event (Admin)                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<p align="center">`The main entry point, outlining the core value propositions of the platform.`</p><img src="https://i.imgur.com/7w8rQzP.png" alt="Landing Page">`            | `<p align="center">`Admin interface for creating and publishing new events on the blockchain.`</p><img src="https://i.imgur.com/4lX3n4N.png" alt="Create Event Page">` |
-| **Approve Participants (Admin)**                                                                                                                                                | **Event Dashboard (User)**                                                                                                                                             |
-| `<p align="center">`Admins can review and approve registered participants with a single click.`</p><img src="https://i.imgur.com/Bf2wK7d.png" alt="Approve Participants Page">` | `<p align="center">`Users can view and register for available events.`</p><img src="https://i.imgur.com/XF8k2eY.png" alt="User Dashboard">`                            |
+ - Landing Page
+  <img width="1680" height="772" alt="Screenshot 2025-07-12 at 18 22 39" src="https://github.com/user-attachments/assets/e8f5dab0-38b1-4356-ac96-abf4629316be" />
+  
+ - Create Event
+  <img width="1667" height="811" alt="Screenshot 2025-07-13 at 14 46 13" src="https://github.com/user-attachments/assets/79a845b8-0e3a-4789-bb0d-355d0990041b" />
+  
+ - Registering for an Event
+  <img width="1680" height="817" alt="Screenshot 2025-07-13 at 14 45 49" src="https://github.com/user-attachments/assets/7c681b52-459d-4c32-ba9e-2767ce0d773d" />
 
 ## ⚙️ How It Works
 
@@ -102,8 +106,8 @@ To get a local copy up and running, follow these simple steps.
    Create a `.env.local` file in the root directory and add the necessary environment variables.
 
    ```env
-   NEXT_PUBLIC_APTOS_NODE_URL="https://fullnode.devnet.aptoslabs.com/v1"
-   NEXT_PUBLIC_CONTRACT_ADDRESS="0x..."
+   MONGODB_URI = ""
+   NEXT_PUBLIC_APP_CREATOR_ADDRESS = ""
    ```
 
 4. **Deploy the Smart Contract:**
