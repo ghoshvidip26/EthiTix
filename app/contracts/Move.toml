@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-event = "0xa8acfaf81cf8d47b4dc260834474c9998ec911f86777ccc70d5a9e31fa93e53e"
+event = "0x85c78420d06e1df4c9c5a4a23c5fda626d702804c2b467f9190e09a5d74b52a7"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"

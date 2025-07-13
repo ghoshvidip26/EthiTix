@@ -37,7 +37,6 @@ const Approve = () => {
         const res = await axios.get("/api/user/profile");
         setUsers(res.data);
 
-        // Initialize approval state per user
         const initialStates: Record<string, ApprovalState> = {};
         res.data.forEach((user: UserData) => {
           initialStates[user.walletAddress] = {

@@ -13,6 +13,8 @@ export default function UserDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [eventId, setEventId] = useState<string | null>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [registered, setRegistered] = useState(false);
   const { qrCodeURL, hash, generateQRCode } = useQRCode();
   console.log("QR Code URL:", qrCodeURL);
 
@@ -39,7 +41,6 @@ export default function UserDashboard() {
     }
 
     const APP_CREATOR_ADDRESS = process.env.NEXT_PUBLIC_APP_CREATOR_ADDRESS;
-    const { generateQRCode } = useQRCode(); // ensure this is included at the top
 
     setLoadingId(eId);
     setError(null);
@@ -53,14 +54,11 @@ export default function UserDashboard() {
     };
 
     try {
-      console.log("Submitting transaction:", transaction);
       const response = await window.aptos.signAndSubmitTransaction(transaction);
-
-      console.log("Transaction submitted:", response);
       setTxHash(response.hash);
-
-      // Generate QR code for the transaction hash
+      setRegistered(true);
       await generateQRCode(response.hash);
+      setShowTicketModal(true);
     } catch (e: any) {
       console.error("Transaction failed:", e);
       setError(`Transaction failed: ${e.message || "Unknown error occurred"}`);
@@ -111,27 +109,51 @@ export default function UserDashboard() {
                     "Register"
                   )}
                 </button>
-                {qrCodeURL && (
-                  <img
-                    src={qrCodeURL}
-                    alt="QR Code"
-                    className="mt-4 w-32 h-32 mx-auto border border-amber-200 rounded-md shadow"
-                  />
-                )}
-                {hash && (
-                  <a
-                    href={`https://explorer.aptoslabs.com/txn/${hash}?network=testnet`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mt-2 text-center text-sm text-amber-100 underline"
-                  >
-                    View Transaction
-                  </a>
-                )}
               </div>
             </div>
           ))}
         </div>
+        {registered && !showTicketModal && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setShowTicketModal(true)}
+              className="px-6 py-2 bg-indigo-700 text-white font-semibold rounded-lg hover:bg-indigo-600 transition"
+            >
+              🎟 View Your Ticket
+            </button>
+          </div>
+        )}
+
+        {showTicketModal && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center relative">
+              <button
+                onClick={() => setShowTicketModal(false)}
+                className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-xl"
+              >
+                ×
+              </button>
+              <h3 className="text-lg font-semibold text-indigo-800 mb-4">
+                Your Ticket 🎫
+              </h3>
+              <img
+                src={qrCodeURL}
+                alt="QR Code"
+                className="w-40 h-40 mx-auto border border-amber-400 rounded-md"
+              />
+              {hash && (
+                <a
+                  href={`https://explorer.aptoslabs.com/txn/${hash}?network=testnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block text-sm text-indigo-600 underline"
+                >
+                  View on Aptos Explorer
+                </a>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
